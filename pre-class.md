@@ -1,12 +1,29 @@
-**Goal:** Students should arrive with their environment ready and a basic grasp of "The Join Concept."
+# **Pre-class Study: Advanced SQL Navigation**
 
-* **Setup:** Ensure DbGate is installed and the unit-1-5.db file is downloaded to the /db folder.
+Welcome! Before our session, we need to ensure your "cockpit" is ready for flight. We will be using **DuckDB**, a high-performance database, and **DbGate** as our control center.
 
-* **Key Concept Summary:**  
-  * **The "Map" (Meta Queries):** How to ask the database "What do you know?" using SHOW and DESCRIBE.
+## **1. Environment Setup**
 
-  * **The "Venn Diagram" (Joins):** A conceptual overview of Inner vs. Outer joins.
+* **Database File:** Ensure you have the unit-1-5.db file downloaded to a known folder on your computer.
 
-  * **The "Table Builder" (CTEs):** Thinking of queries as "temporary folders" for your data.
+## **2. Key Concepts to Recall**
 
-* **Reading:** Review the provided ERD (Entity Relationship Diagram) to understand how client, car, claim, and address tables relate via IDs.
+Think of a database like a library.
+
+* **Metadata** is the card catalog (information about the books).  
+* **Tables** are the shelves.  
+* **Joins** are the connections we make when a book in the "Authors" section refers to a book in the "Geography" section.
+
+## **3. The "Why" of Advanced SQL**
+
+In basic SQL, we ask simple questions: "Show me all clients."  
+In advanced SQL, we ask analytical questions: "Show me the top 10% of clients based on their insurance claim history compared to their peers in the same city."
+
+### **Self-Study Task:**
+
+1. Open DBeaver.  
+2. Create a new "DuckDB" connection.  
+3. Point it to the unit-1-5.db file.  
+4. Run: SELECT * FROM client LIMIT 5; to verify connection.
+
+*Ready? See you in class where we turn these tables into insights\!*
