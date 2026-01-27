@@ -57,7 +57,9 @@ DESCRIBE address;
 
 You should see the column names and data types.
 
-**Exercie:** Describe the other 3 tables. Study their column names and data types.
+**Exercise 1:** 
+
+- Describe the other 3 tables. Study their column names and data types.
 
 #### Summarize tables
 
@@ -72,9 +74,9 @@ SUMMARIZE address;
 > - For numeric columns (like `id`), it shows stats such as `min`, `max`, `avg`, `stddev`, and `approx_unique` (estimated distinct count). 
 > - For text columns (like `country`, `state`, `city`), it usually skips numeric-only stats but still gives `min`/`max` (lexicographically) and `approx_unique`, so you can see “how many different values” appear in that column. 
 
-**Exercise 1:** 
+**Exercise 2:** 
 
-Summarize the other 3 tables. Study their min, max, approx_unique, avg and std (if applicable).
+- Summarize the other 3 tables. Study their min, max, approx_unique, avg and std (if applicable).
 
 #### Joins and Unions
 
@@ -225,14 +227,14 @@ FROM contractors;
 
 **Questions:** "If I SUMMARIZE the claim table and see a max(claim_amt) that is 10x higher than the average, what does that tell you about our insurance risk?"
 
-**Exercise 2:**
+**Exercise 3:**
 
-Create a master report of every claim. Include the client's name, their car type, and the city they live in.  
-Hint: You will need to join 4 tables.  
+- Create a master report of every claim. Include the client's name, their car type, and the city they live in.  
+- Hint: You will need to join 4 tables.  
 
 <details>
 
-  <summary>Solution for Master Report</summary>
+  <summary>Solution for Exercise 3</summary>
   
 ```sql
 -- Solution for Master Report  
@@ -325,13 +327,13 @@ FROM claim;
 
 > Return a table containing `id, car_id, claim_amt, running_total` from claim, where `running_total` is the running sum of the `claim_amt` column for each `car_id`.
 
-**Exercise 3:**  
+**Exercise 4:**  
 
-Calculate a running total of insurance payouts over time (ordered by claim_date).  
+- Calculate a running total of insurance payouts over time (ordered by claim_date).  
 
 <details>
 
-  <summary>Solution for Running Total</summary>
+  <summary>Solution for Exercise 4</summary>
   
 ```sql
 SELECT   
@@ -411,11 +413,21 @@ The `QUALIFY` clause is used to filter rows in a window. It is useful when you w
 ```sql
 
 -- The Ranking Window  
-SELECT   
-    id, car_id, claim_amt,  
-    RANK() OVER (PARTITION BY car_id ORDER BY claim_amt DESC) AS rank  
-FROM claim  
-QUALIFY rank = 1; -- DuckDB specific 'QUALIFY' to filter windows  
+SELECT
+  cl.id,
+  c.car_type,
+  cl.claim_amt,
+  RANK() OVER (
+    PARTITION BY car_type
+    ORDER BY
+      claim_amt DESC
+  ) AS rank
+FROM
+  claim cl
+  JOIN car c ON cl.car_id = c.id
+QUALIFY rank = 1
+ORDER BY
+  cl.claim_amt DESC; 
 ```
 
 
@@ -534,8 +546,37 @@ JOIN AvgValues a ON c.car_type = a.car_type
 WHERE c.resale_value < a.avg_resale;
 ```
 
-**Exercise 4:**  
-Find clients who have made claims that are more than 50% of their annual income. Use a CTE to calculate the total claims per client first.
+**Exercise 5:**  
+
+- Find clients who have made claims that are more than 50% of their annual income. Use a CTE to calculate the total claims per client first.
+
+
+<details>
+
+  <summary>Solution for Exercise 5</summary>
+  
+```sql
+WITH TotalClaimsPerClient AS (
+  SELECT
+    client_id,
+    SUM(claim_amt) AS total_claims
+  FROM claim
+  GROUP BY client_id
+)
+SELECT
+  c.id AS client_id,
+  c.income,
+  t.total_claims
+FROM client c
+JOIN TotalClaimsPerClient t
+  ON c.id = t.client_id
+WHERE t.total_claims > 0.5 * c.income;
+```
+
+</details>
+
+
+
 
 ### **Q\&A / Reflection**
 
