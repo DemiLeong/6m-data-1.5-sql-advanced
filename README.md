@@ -29,4 +29,3 @@ Learners will be able to:
 - Use subqueries to filter data
 - Use common table expressions to create temporary tables
 
-test 
